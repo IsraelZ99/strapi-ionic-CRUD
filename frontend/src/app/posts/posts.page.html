@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>posts</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col *ngFor="let post of posts" size="12" sizeMd="4">
+        {{error}}
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title> {{post.attributes.title}} </ion-card-title>
+            <ion-card-subtitle>
+              {{post.attributes.subtitle}}
+            </ion-card-subtitle>
+          </ion-card-header>
+          <img [src]="getPostImage(post.attributes.image.data)" alt="" />
+          <ion-card-content>
+            <div>
+              <ion-button
+                color="secondary"
+                [routerLink]="['/posts/edit', post.id]"
+                >Update</ion-button
+              >
+              <ion-button color="danger" (click)="deletePostById(post.id)"
+                >Delete</ion-button
+              >
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="danger" routerLink="/post-form">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
