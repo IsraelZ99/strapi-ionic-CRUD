@@ -16,6 +16,17 @@ export interface PostDataRequest {
     }
 }
 
+export interface PostData {
+    id: number;
+    attributes: {
+        title: string;
+        description: string;
+        subtitle: string;
+        image: any;
+        srcImage: any;
+    }
+}
+
 export interface CreatePost {
     title: string;
     description: string;

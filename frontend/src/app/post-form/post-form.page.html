@@ -18,15 +18,27 @@
           <ion-card-content>
             <ion-item>
               <ion-label position="floating">Title</ion-label>
-              <ion-input #title [value]="form.title"></ion-input>
+              <ion-input
+                #title
+                [value]="form.title"
+                [(ngModel)]="form.title"
+              ></ion-input>
             </ion-item>
             <ion-item>
               <ion-label position="floating">Description</ion-label>
-              <ion-input #description [value]="form.description"></ion-input>
+              <ion-input
+                #description
+                [value]="form.description"
+                [(ngModel)]="form.description"
+              ></ion-input>
             </ion-item>
             <ion-item>
               <ion-label position="floating">Subtitle</ion-label>
-              <ion-input #subtitle [value]="form.subtitle"></ion-input>
+              <ion-input
+                #subtitle
+                [value]="form.subtitle"
+                [(ngModel)]="form.subtitle"
+              ></ion-input>
             </ion-item>
             <app-input-file
               *ngIf="isCreatingPost(); else elseBlock"
@@ -40,12 +52,13 @@
               color="primary"
               expand="full"
               (click)="saveHandler(title, description, subtitle)"
-              [disabled]="isUploading"
+              [disabled]="!isFormValid || isUploading"
             >
               Save
             </ion-button>
           </ion-card-content>
         </ion-card>
+        {{ form | json }}
       </ion-col>
     </ion-row>
   </ion-grid>

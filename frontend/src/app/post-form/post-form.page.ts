@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 import { PostService } from '../services/post.service';
 import { CreatePost } from '../model/Posts';
 import { Actions, PostForm } from '../model/PostForm';
 import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-post-form',
@@ -14,7 +15,7 @@ export class PostFormPage implements OnInit {
 
   public titlePage: string = '';
   private action: Actions;
-  public form: PostForm = { title: '', description: '', subtitle: '', image: '' };
+  public form: PostForm = { title: null, description: null, subtitle: null, image: null };
   private postId: any = null;
   public isUploading: boolean = false;
   private image: any = null;
@@ -57,10 +58,10 @@ export class PostFormPage implements OnInit {
   }
 
   public savePost(title: any, description: any, subtitle: any) {
-    this.uploadImage().subscribe(() => {
-      const post: CreatePost = { title: title.value, description: description.value, subtitle: subtitle.value, image: this.form.image };
-      this.postService.createPost(post).subscribe(postCreated => this.router.navigate(['/posts']));
-    })
+    this.uploadImage().pipe(switchMap((imageId) => {
+      const post: CreatePost = { title: title.value, description: description.value, subtitle: subtitle.value, image: imageId };
+      return this.postService.createPost(post);
+    })).subscribe(postCreated => this.router.navigate(['/posts']));
   }
 
   public updatePost(id: number, title: any, description: any, subtitle: any) {
@@ -68,14 +69,12 @@ export class PostFormPage implements OnInit {
     this.postService.updatePost(id, post).subscribe(postCreated => this.router.navigate(['/posts']));
   }
 
-
   private uploadImage(): Observable<any> {
     return new Observable(observer => {
       this.isUploading = true;
       this.postService.uploadImage(this.image).subscribe(resp => {
         this.isUploading = false;
-        this.form.image = resp[0].id;
-        observer.next();
+        observer.next(resp[0].id);
       }, err => {
         console.error(err);
       });
@@ -92,6 +91,10 @@ export class PostFormPage implements OnInit {
 
   public stateChangeUploadingImage(state) {
     this.isUploading = state;
+  }
+
+  public get isFormValid(): boolean {
+    return this.form.title && this.form.description && this.form.subtitle && this.image;
   }
 
 }

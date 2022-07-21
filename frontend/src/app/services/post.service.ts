@@ -24,7 +24,7 @@ export class PostService {
     }));
   }
 
-  public getImageFromPostByUrl(urlImage: string): string {
+  public getImageFromPostByUrl(urlImage: string): any {
     return `${this.server}${urlImage}`;
   }
 
